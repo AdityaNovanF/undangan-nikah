@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background circle warm cream -->
+  <circle cx="32" cy="32" r="32" fill="#2C2417"/>
+
+  <!-- Two interlocking rings -->
+  <circle cx="25" cy="30" r="9" fill="none" stroke="#D4B483" stroke-width="3"/>
+  <circle cx="39" cy="30" r="9" fill="none" stroke="#D4B483" stroke-width="3"/>
+
+  <!-- Heart above rings -->
+  <path d="M32 22 C32 22 28 17 24 19 C20 21 20 26 24 29 L32 36 L40 29 C44 26 44 21 40 19 C36 17 32 22 32 22 Z"
+        fill="#D4B483" opacity="0.9"/>
+</svg>

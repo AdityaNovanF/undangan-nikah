@@ -12,6 +12,8 @@ const App = () => {
   ]);
   const [formData, setFormData] = useState({ name: '', message: '', status: 'Hadir' });
   const audioRef = useRef(null);
+  const mempelaiRef = useRef(null);
+  const [mempelaiVisible, setMempelaiVisible] = useState(false);
 
   // Set Resepsi date: 2026-06-01
   const weddingDate = new Date('2026-06-01T10:00:00').getTime();
@@ -40,6 +42,26 @@ const App = () => {
       document.querySelectorAll('[data-observe]').forEach(el => observer.observe(el));
     }, 200);
     return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [isOpen]);
+
+  // Auto berubah warna saat section mempelai masuk viewport
+  useEffect(() => {
+    if (!isOpen) return;
+    const timer = setTimeout(() => {
+      if (!mempelaiRef.current) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setMempelaiVisible(true);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.3 }
+      );
+      observer.observe(mempelaiRef.current);
+      return () => observer.disconnect();
+    }, 200);
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   // Auto-scroll jika 5 detik tidak ada interaksi
@@ -126,24 +148,27 @@ const App = () => {
     }
   };
 
-  // Gunakan path relatif yang benar untuk file yang diunggah
-  const photoAdit = "/mempelai pria.jpeg";
-  const photoIra = "/mempelai wanita.jpeg";
+  // Gunakan WebP yang sudah dioptimasi (ukuran jauh lebih kecil)
+  const photoAdit = "/mempelai-pria.webp";
+  const photoIra = "/mempelai-wanita.webp";
+
+  // Baca nama tamu dari URL: ?to=NamaTamu
+  const guestName = new URLSearchParams(window.location.search).get('to') || '';
 
   const galleryImages = [
-    "/galeri/galeri akdsj.jpeg",
-    "/galeri/galeri fwie.jpeg",
-    "/galeri/galeri iyegd.jpeg",
-    "/galeri/galeri sdhkbf.jpeg",
-    "/galeri/galeri udgj.jpeg",
-    "/galeri/galeri uief.jpeg"
+    "/galeri/g1.webp",
+    "/galeri/g2.webp",
+    "/galeri/g3.webp",
+    "/galeri/g4.webp",
+    "/galeri/g5.webp",
+    "/galeri/g6.webp"
   ];
 
   if (!isOpen) {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900 text-white overflow-hidden font-serif">
         <div className="absolute inset-0 opacity-40">
-          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover" alt="Latar Belakang Pernikahan" />
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=60&w=1200&fm=webp" className="w-full h-full object-cover" alt="Latar Belakang Pernikahan" loading="eager" decoding="async" fetchpriority="high" />
         </div>
         <div className="relative z-10 text-center px-6 animate-fade-in">
           <div className="mb-6 flex justify-center">
@@ -151,7 +176,21 @@ const App = () => {
           </div>
           <p className="tracking-[0.5em] text-sm mb-4 uppercase text-amber-100">Undangan Resepsi Pernikahan</p>
           <h1 className="text-5xl md:text-7xl font-serif mb-10 tracking-tight">Adit & Ira</h1>
-          <p className="text-stone-300 italic mb-8 font-light tracking-widest">Kepada Bapak/Ibu/Saudara/i</p>
+
+          {/* Nama tamu */}
+          <div className="mb-8">
+            <p className="text-stone-400 italic font-light tracking-widest text-sm mb-2">Kepada Yth.</p>
+            {guestName ? (
+              <>
+                <div className="w-16 h-px bg-amber-400/50 mx-auto mb-3" />
+                <p className="text-amber-100 font-serif text-xl md:text-2xl tracking-wide">{guestName}</p>
+                <div className="w-16 h-px bg-amber-400/50 mx-auto mt-3" />
+              </>
+            ) : (
+              <p className="text-stone-300 font-light tracking-widest">Bapak/Ibu/Saudara/i</p>
+            )}
+          </div>
+
           <button
             onClick={openInvitation}
             className="px-10 py-4 bg-amber-200 text-stone-900 rounded-full font-semibold hover:bg-amber-300 transition-all shadow-2xl flex items-center gap-2 mx-auto tracking-widest uppercase text-xs"
@@ -179,9 +218,12 @@ const App = () => {
       <header className="relative h-screen flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2000"
+            src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=55&w=1400&fm=webp"
             className="w-full h-screen object-cover opacity-20 fixed"
             alt="Pernikahan Mewah"
+            loading="eager"
+            decoding="async"
+            fetchpriority="low"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#FDFCF8]/30 to-[#FDFCF8]"></div>
         </div>
@@ -235,13 +277,13 @@ const App = () => {
           <p className="text-stone-400 italic font-light tracking-widest">Maha Suci Allah yang telah menyatukan kami dalam ikatan suci</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-32 items-center">
+        <div ref={mempelaiRef} className="grid md:grid-cols-2 gap-32 items-center">
           <div className="group text-center flex flex-col items-center gap-8">
             <div className="relative w-72 h-96 bg-stone-200">
-              <div className="absolute inset-0 border-[0.5px] border-amber-300 translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-700"></div>
+              <div className={`absolute inset-0 border-[0.5px] border-amber-300 transition-all duration-700 ${mempelaiVisible ? 'translate-x-0 translate-y-0' : 'translate-x-4 translate-y-4'}`}></div>
               <div
-                className="relative z-10 w-full h-full grayscale group-hover:grayscale-0 transition-[filter] duration-700"
-                style={{ transform: 'translateZ(0)' }}
+                className="relative z-10 w-full h-full transition-[filter] duration-1000"
+                style={{ filter: mempelaiVisible ? 'grayscale(0%)' : 'grayscale(100%)', transform: 'translateZ(0)' }}
               >
                 <img
                   src={photoAdit}
@@ -249,7 +291,8 @@ const App = () => {
                   style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)' }}
                   alt="Aditya Novan Firmansyah"
                   loading="eager"
-                  decoding="sync"
+                  decoding="async"
+                  fetchpriority="high"
                 />
               </div>
             </div>
@@ -263,10 +306,10 @@ const App = () => {
 
           <div className="group text-center flex flex-col items-center gap-8">
             <div className="relative w-72 h-96 bg-stone-200">
-              <div className="absolute inset-0 border-[0.5px] border-amber-300 -translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-700"></div>
+              <div className={`absolute inset-0 border-[0.5px] border-amber-300 transition-all duration-700 delay-200 ${mempelaiVisible ? 'translate-x-0 translate-y-0' : '-translate-x-4 translate-y-4'}`}></div>
               <div
-                className="relative z-10 w-full h-full grayscale group-hover:grayscale-0 transition-[filter] duration-700"
-                style={{ transform: 'translateZ(0)' }}
+                className="relative z-10 w-full h-full transition-[filter] duration-1000 delay-200"
+                style={{ filter: mempelaiVisible ? 'grayscale(0%)' : 'grayscale(100%)', transform: 'translateZ(0)' }}
               >
                 <img
                   src={photoIra}
@@ -274,7 +317,8 @@ const App = () => {
                   style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)' }}
                   alt="Fitratun Nikmatul Khoiriyah"
                   loading="eager"
-                  decoding="sync"
+                  decoding="async"
+                  fetchpriority="high"
                 />
               </div>
             </div>
@@ -371,9 +415,10 @@ const App = () => {
                 src={src}
                 alt={`Momen Bahagia ${i + 1}`}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)', imageRendering: 'auto' }}
-                loading="lazy"
+                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)' }}
+                loading={i < 2 ? 'eager' : 'lazy'}
                 decoding="async"
+                fetchpriority={i === 0 ? 'high' : 'low'}
               />
             </div>
           ))}
