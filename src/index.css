@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', 'Noto Serif', serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+    color: #292524;
+    background: #FFFDF9;
+  }
+
+  ::selection {
+    background-color: #fef3c7;
+    color: #292524;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
