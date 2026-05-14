@@ -82,14 +82,14 @@ const App = () => {
 
   const toggleMusic = () => {
     if (isPlaying) { audioRef.current.pause(); }
-    else { audioRef.current.play().catch(() => {}); }
+    else { audioRef.current.play().catch(() => { }); }
     setIsPlaying(!isPlaying);
   };
 
   const openInvitation = () => {
     setIsOpen(true);
     setIsPlaying(true);
-    setTimeout(() => { if (audioRef.current) audioRef.current.play().catch(() => {}); }, 500);
+    setTimeout(() => { if (audioRef.current) audioRef.current.play().catch(() => { }); }, 500);
   };
 
   const handleRsvpSubmit = (e) => {
@@ -414,7 +414,7 @@ const App = () => {
             { year: '2017', title: 'Awal Pertemuan', desc: 'Dipertemukan dalam satu kelas selama satu semester. Hanya sekadar saling kenal, namun takdir telah menuliskan cerita yang lebih indah.' },
             { year: 'Sep 2025', title: 'Jatuh Cinta', desc: 'Pertemuan kembali yang tak disangka, menumbuhkan rasa yang begitu cocok — sebuah keajaiban yang tak pernah terbayangkan sebelumnya.' },
             { year: 'Jan 2026', title: 'Melamar Cinta', desc: 'Dengan restu kedua keluarga, janji suci pun dimulai. Sebuah langkah penuh keyakinan untuk menyatukan dua hati dalam satu tujuan.' },
-            { year: 'Jun 2026', title: 'Hari Bahagia', desc: 'Akhirnya, hari yang dinantikan tiba. Dua jiwa disatukan dalam ikatan suci pernikahan, atas ridho Allah SWT.' },
+            { year: 'Apr 2026', title: 'Hari Bahagia', desc: 'Akhirnya, hari yang dinantikan tiba. Dua jiwa disatukan dalam ikatan suci pernikahan, atas ridho Allah SWT.' },
           ].map((item, i) => (
             <div key={i} className="reveal-child relative mb-8 sm:mb-12">
               {/* Mobile layout */}
